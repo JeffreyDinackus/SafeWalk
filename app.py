@@ -4018,7 +4018,7 @@ logsof2022 = [
 
 list2 = []
 for crime in logsof2022:
-  print(crime["FIELD6"])
+  # print(crime["FIELD6"])
 
   list2.append(crime["FIELD6"])
   # for crime.field6 in crime:
@@ -4049,7 +4049,7 @@ for i in list2:
       dictionary["Fairfax"] = dictionary["Fairfax"] +1
     if i == value == "WO":
       dictionary["WO"] = dictionary["WO"] +1
-print(dictionary)
+
 
 dictionary2 = {}
 # print(dictionary2)
@@ -4063,7 +4063,7 @@ for campus in list2:
     dictionary2.update({campus : 1})
 
 
-# print(dictionary2)
+print(dictionary2)
 
 list3 = []
 for actualcrime in logsof2022:
@@ -4094,11 +4094,11 @@ for ret in list3:
 
 sortedcrimes = dict(sorted(dictionary3.items(), key=lambda item: item[1]))
 
-print(sortedcrimes)
+# print(sortedcrimes)
 
 @app.route('/')
 def hello():
-    return render_template("index.html", sortedcrimes=sortedcrimes, logsof2022=logsof2022)
+    return render_template("index.html", sortedcrimes=sortedcrimes, logsof2022=logsof2022, dictionary2=dictionary2)
 
 
 if __name__ == "__main__":
