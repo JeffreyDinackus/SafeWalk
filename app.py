@@ -4094,11 +4094,15 @@ for ret in list3:
 
 sortedcrimes = dict(sorted(dictionary3.items(), key=lambda item: item[1]))
 
+reversed_dict = sortedcrimes
+
 # print(sortedcrimes)
 
 @app.route('/')
 def hello():
-    return render_template("index.html", sortedcrimes=sortedcrimes, logsof2022=logsof2022, dictionary2=dictionary2)
+    return render_template("index.html", reversed_dict=reversed_dict, logsof2022=logsof2022, dictionary2=dictionary2)
+
+#dictionary2 = campuses output
 
 
 if __name__ == "__main__":

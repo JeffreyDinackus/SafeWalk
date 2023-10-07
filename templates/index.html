@@ -46,8 +46,43 @@
 
       <div class="column">
         <p>Crime Stats</p>
+        <li>Crime total for Annandale Campus 2022: {{ dictionary2['AN'] }}</li>
+        <li>Crime total for Alexandria Campus 2022: {{ dictionary2['AL'] }}</li>
+        <li>Crime total for Loudon Campus 2022: {{ dictionary2['LO'] }}</li>
+        <li>Crime total for Woodbridge Campus 2022: {{ dictionary2['WO'] }}</li>
+        <li>Crime total for Manassas Campus 2022: {{ dictionary2['MA'] }}</li>
+
+        <li>Crime total for Medical Education Campus 2022: {{ dictionary2['MEC'] }}</li>
+        <li>Crime total for Fairfax 2022: {{ dictionary2['Fairfax'] }}</li>
+
+        <li>Crime total for Reston 2022: {{ dictionary2['Reston'] }}</li>
+        <li>Crime total for Bookstore 2022: {{ dictionary2['Bookstore'] }}</li>
+
+
+
+
+
       </div>
     </div>
+    <div class="container">
+      <p>table of contents</p>
+      <a href="#allcrimes">
+        <p>Show all crime descriptions ordered by frequency</p>
+      </a>
+
+      <a href="#crimesordered">
+        <p>Show all crime data</p>
+      </a>
+      <h1>Raw data:</h1>
+      <p id="crimesordered">{{dictionary2 }}</p>
+      <p id="allcrimes">All crimes ordered by frequency: {{reversed_dict}}</p>
+
+      <p id="alldata">{{logsof2022}}</p>
+    </div>
+
+
+
+  </div>
   </div>
 
   <!-- <iframe allowfullscreen="allowfullscreen" aria-label="Google map of the Annandale  campus" frameborder="0"
@@ -87,7 +122,10 @@
         { lat: 38.94867935022676, lng: -77.33252967855643, },
         { lat: 38.61785389183354, lng: -77.29447756323047 },
         { lat: 39.045385163235494, lng: -77.4010038655019, },
-        { lat: 38.840471085801575, lng: -77.11389238258755, }
+        { lat: 38.840471085801575, lng: -77.11389238258755, },
+        { lat: 38.76366222523989, lng: -77.17640062698582, },
+        { lat: 38.76366222523989, lng: -77.17640062698582, },
+        { lat: 38.94854584744731, lng: -77.33248676321367 }
 
       ];
 
