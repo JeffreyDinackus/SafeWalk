@@ -1,151 +1,9 @@
-from flask import Flask, render_template
-
-
+from flask import Flask, redirect, render_template, request, url_for
+import openai
+import os
 app = Flask(__name__)
 
 
-data = [
- {
-   "FIELD1": "Case\n Number",
-   "FIELD2": "Nature\n Classification",
-   "FIELD3": "Date/Time\n Reported",
-   "FIELD4": "Date/Time\n Occurred",
-   "FIELD5": "General\n Location",
-   "FIELD6": "Campus",
-   "FIELD7": "Disposition",
-   "FIELD8": "Description"
- },
- {
-   "FIELD1": "2023-000243",
-   "FIELD2": "Police Service",
-   "FIELD3": "10-5-2023\n 1742",
-   "FIELD4": "10-5-2023\n 0540",
-   "FIELD5": "Pender 4",
-   "FIELD6": "PN",
-   "FIELD7": "Report Taken",
-   "FIELD8": "Report of  someone attempting to get into the building"
- },
- {
-   "FIELD1": "2023-000242",
-   "FIELD2": "Drug Violation",
-   "FIELD3": "10-5-2023\n 1635",
-   "FIELD4": "10-5-2023\n 1635",
-   "FIELD5": "Parking Garage",
-   "FIELD6": "AN",
-   "FIELD7": "Report Taken Summons Issued 2X Referred to Student Conduct",
-   "FIELD8": "Individual under 21 possessing marijuana and drug paraphernalia"
- },
- {
-   "FIELD1": "2023-000241",
-   "FIELD2": "Police Service",
-   "FIELD3": "10-5-2023\n 1521",
-   "FIELD4": "Between 10-4-2023 at 2200 and 10-5-2023 at 0800",
-   "FIELD5": "Not on NOVA’s Clery Geography",
-   "FIELD6": "MA",
-   "FIELD7": "Report Taken",
-   "FIELD8": "Report of a NOVA laptop stolen off campus"
- },
- {
-   "FIELD1": "2023-000239",
-   "FIELD2": "Welfare Check",
-   "FIELD3": "10-5-2023\n 1123",
-   "FIELD4": "10-5-2023\n 1123",
-   "FIELD5": "LHEC Building",
-   "FIELD6": "LO",
-   "FIELD7": "Report Taken NOVACares Notified",
-   "FIELD8": "Welfare check request for a student on campus"
- },
- {
-   "FIELD1": "2023-000237",
-   "FIELD2": "Weapons Violation",
-   "FIELD3": "10-4-23\n 1623",
-   "FIELD4": "Unknown",
-   "FIELD5": "Soccer Field near Lot LO7",
-   "FIELD6": "LO",
-   "FIELD7": "Report Taken",
-   "FIELD8": "Report of rusted old bullet hole damage to a soccer field storage box"
- },
- {
-   "FIELD1": "2310040031",
-   "FIELD2": "Suspicious Vehicle",
-   "FIELD3": "10-4-2023\n 1129",
-   "FIELD4": "10-4-2023\n 129",
-   "FIELD5": "Lot AN3",
-   "FIELD6": "AN",
-   "FIELD7": "Assisted",
-   "FIELD8": "Report of a disabled and wrecked vehicle parked in Lot AN3"
- },
- {
-   "FIELD1": "2023-000236",
-   "FIELD2": "Threats\n (Stalking)\n (Dating Violence)",
-   "FIELD3": "10-4-2023\n 0951",
-   "FIELD4": "10-4-2023\n 0951",
-   "FIELD5": "5000 Dawes Ave",
-   "FIELD6": "AL",
-   "FIELD7": "Report Taken Title IX and Student Conduct notified",
-   "FIELD8": "Report of an ex-partner  threatening to send nude photos of complainant and stalking them"
- },
- {
-   "FIELD1": "2023-000235",
-   "FIELD2": "Suspicious Activity",
-   "FIELD3": "10-3-2023\n 1421",
-   "FIELD4": "9-28-2023\n 0946",
-   "FIELD5": "CT Building",
-   "FIELD6": "AN",
-   "FIELD7": "Report Taken NOVACares Notified",
-   "FIELD8": "Report of an individual writing suspicious things"
- },
- {
-   "FIELD1": "2023-000234",
-   "FIELD2": "Hit & Run",
-   "FIELD3": "10-3-2023\n 1241",
-   "FIELD4": "10-3-2023\n 1030-1220",
-   "FIELD5": "Parking Garage",
-   "FIELD6": "AN",
-   "FIELD7": "Report Taken Unfounded",
-   "FIELD8": "Report of a hit and run and later discovered it did not take place on campus"
- },
- {
-   "FIELD1": "2023-000233\n (Related to 2023-000232)",
-   "FIELD2": "Assault",
-   "FIELD3": "10-2-2023\n 2122",
-   "FIELD4": "10-2-2023\n 2122",
-   "FIELD5": "LHEC Building",
-   "FIELD6": "LO",
-   "FIELD7": "Report Taken",
-   "FIELD8": "Report of a simple assault of 3 individuals by the individual  from case 2023-000232"
- },
- {
-   "FIELD1": "2023-000231",
-   "FIELD2": "EMS",
-   "FIELD3": "10-2-2023\n 1417",
-   "FIELD4": "10-2-2023\n 1417",
-   "FIELD5": "CC Building",
-   "FIELD6": "AN",
-   "FIELD7": "Report Taken",
-   "FIELD8": "Report of individual having a medical issue"
- },
- {
-   "FIELD1": "2023-000232",
-   "FIELD2": "Assault",
-   "FIELD3": "10-2-2023\n 1414",
-   "FIELD4": "10-2-2023\n 1414",
-   "FIELD5": "LC Building",
-   "FIELD6": "LO",
-   "FIELD7": "Report Taken Cleared by arrest No Trespass Order Issued",
-   "FIELD8": "Report of simple assault by an identified male"
- },
- {
-   "FIELD1": "2310010008",
-   "FIELD2": "Welfare Check",
-   "FIELD3": "10-1-23\n 1610",
-   "FIELD4": "10-1-23\n 1610",
-   "FIELD5": "Behind Beauregard Parking Garage",
-   "FIELD6": "AL",
-   "FIELD7": "No Police Action",
-   "FIELD8": "Unit observed a homeless individual lying in the grass area"
- }
-]
 
 # print(data)
 
@@ -4095,14 +3953,44 @@ for ret in list3:
 sortedcrimes = dict(sorted(dictionary3.items(), key=lambda item: item[1]))
 
 reversed_dict = sortedcrimes
-
 # print(sortedcrimes)
 
-@app.route('/')
-def hello():
-    return render_template("index.html", reversed_dict=reversed_dict, logsof2022=logsof2022, dictionary2=dictionary2)
 
-#dictionary2 = campuses output
+openai.api_key = ""
+
+
+@app.route("/", methods=("GET", "POST"))
+def index():
+    if request.method == "POST":
+        animal = request.form["crime"]
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=generate_prompt(animal),
+            temperature=0.6,
+        )
+        return redirect(url_for("index", result=response.choices[0].text))
+    
+    result = request.args.get("result")
+
+    print(result)
+    return render_template("index.html", result=result, logsof2022=logsof2022, dictionary2=dictionary2, reversed_dict=reversed_dict)
+
+
+def generate_prompt(animal):
+    return """
+Suggest 1 safety ideas
+
+noun: crime
+ideas: walk in groups, tell people before you go out, don't leave belongings in your car in sight
+
+noun: safety
+
+ideas: call campus police, use the blue light buttons, don't go out late at night
+
+past crime data:
+
+avoid high crime campuses, tell your parents where you are, don't walk to high crime areas
+""".format()
 
 
 if __name__ == "__main__":

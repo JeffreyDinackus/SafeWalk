@@ -15,6 +15,10 @@
       border: 1px, black;
       /* The width is the width of the web page */
     }
+
+    .ai {
+      margin-bottom: 5px;
+    }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
@@ -62,60 +66,74 @@
         <hr>
 
 
+        <form action="/" method="post">
+          <p class="ai">AI Safety tips</p>
 
-        <div id="chat-container">
-          <div id="chat-log"></div>
-          <input type="text" id="user-input" class="input" placeholder="Ask a question about 2022 NVCC crime data"
-            value="">
-          <br><br>
-          <button id="send-button" class="button mt-small">Send</button>
-        </div>
+          <input type="text" name="crime" id="user-input" class="input"
+            placeholder="Ask a question about 2022 NVCC crime data" value="" required>
+          <input type="submit" class="button" value="Send" />
+        </form>
+        {% if result %}
+        <div class="result">{{ result }}</div>
+        {% endif %}
 
 
-        <script>const apiKey = 'YOUR_API_KEY'; // Replace with your ChatGPT API key
-          const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
+        <script>
 
-          const chatLog = document.getElementById('chat-log');
-          const userInput = document.getElementById('user-input');
-          const sendButton = document.getElementById('send-button');
 
-          sendButton.addEventListener('click', () => {
-            const userMessage = userInput.value;
-            if (userMessage.trim() !== '') {
-              appendMessage('You', userMessage);
+          //   const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
+          //   const fixedPrompt = `${json} Answer questions of students about the NVCC crime data and offer advice about safety`;
 
-              // Send user message to ChatGPT API
-              fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                  'Authorization': `Bearer ${apiKey}`,
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  prompt: userMessage,
-                  max_tokens: 50, // Adjust this as needed
-                }),
-              })
-                .then(response => response.json())
-                .then(data => {
-                  const chatGPTResponse = data.choices[0].text;
-                  appendMessage('ChatGPT', chatGPTResponse);
-                })
-                .catch(error => console.error(error));
+          //   const chatLog = document.getElementById('chat-log');
+          //   const userInput = document.getElementById('user-input');
+          //   const sendButton = document.getElementById('send-button');
 
-              userInput.value = ''; // Clear user input
-            }
-          });
+          //   // Initialize the chat with the fixed prompt
+          //   appendMessage('ChatGPT', fixedPrompt);
 
-          function appendMessage(sender, message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            chatLog.appendChild(messageDiv);
-          }
-        </script>
+          //   sendButton.addEventListener('click', () => {
+          //     const userMessage = userInput.value;
+          //     if (userMessage.trim() !== '') {
+          //       appendMessage('You', userMessage);
+
+          //       // Combine user message with the fixed prompt
+          //       const combinedPrompt = `${fixedPrompt}\nUser: ${userMessage}`;
+
+          //       // Send the combined prompt to ChatGPT API
+          //       fetch(apiUrl, {
+          //         method: 'POST',
+          //         headers: {
+          //           'Authorization': `Bearer ${apiKey}`,
+          //           'Content-Type': 'application/json',
+          //         },
+          //         body: JSON.stringify({
+          //           prompt: combinedPrompt,
+          //           max_tokens: 50, // Adjust this as needed
+          //         }),
+          //       })
+          //         .then(response => response.json())
+          //         .then(data => {
+          //           const chatGPTResponse = data.choices[0].text;
+          //           appendMessage('ChatGPT', chatGPTResponse);
+          //           console.log(chatGPTResponse)
+
+          //         })
+          //         .catch(error => console.error(error));
+
+          //       userInput.value = ''; // Clear user input
+
+          //     }
+          //   });
+
+          //   function appendMessage(sender, message) {
+          //     const messageDiv = document.createElement('div');
+          //     messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+          //     chatLog.appendChild(messageDiv);
+          //   }
+
+          // </script>
 
       </div>
-      <script src="script.js"></script>
 
     </div>
 
@@ -123,18 +141,19 @@
   </div>
   <div class="container">
     <p>table of contents</p>
-    <a href="#allcrimes">
+    <a href="#crimeorder">
       <p>Show all crime descriptions ordered by frequency</p>
     </a>
-
-    <a href="#crimesordered">
+    <a href="#allcrimes">
       <p>Show all crime data</p>
     </a>
-    <h1>Raw data:</h1>
-    <p id="crimesordered">{{dictionary2 }}</p>
-    <p id="allcrimes">All crimes ordered by frequency: {{reversed_dict}}</p>
 
-    <p id="alldata">{{logsof2022}}</p>
+
+    <h1>Raw data:</h1>
+    <p>{{dictionary2 }}</p>
+    <p id="crimeorder">All crimes ordered by frequency: {{reversed_dict}}</p>
+
+    <p id="allcrimes">{{logsof2022}}</p>
   </div>
 
 
@@ -150,7 +169,7 @@
 
   <!-- prettier-ignore -->
   <script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
-      ({ key: "AIzaSyB8Wme0X9MkjzWHr6VJSw1sZin0Mn11jYM", v: "beta" });</script>
+      ({ key: "", v: "beta" });</script>
   <script>
 
 
