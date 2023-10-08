@@ -46,39 +46,96 @@
 
       <div class="column">
         <p>Crime Stats</p>
-        <li>Crime total for Annandale Campus 2022: {{ dictionary2['AN'] }}</li>
-        <li>Crime total for Alexandria Campus 2022: {{ dictionary2['AL'] }}</li>
-        <li>Crime total for Loudon Campus 2022: {{ dictionary2['LO'] }}</li>
-        <li>Crime total for Woodbridge Campus 2022: {{ dictionary2['WO'] }}</li>
-        <li>Crime total for Manassas Campus 2022: {{ dictionary2['MA'] }}</li>
+        <p>Crime total for Annandale Campus 2022: {{ dictionary2['AN'] }}</p>
+        <p>Crime total for Alexandria Campus 2022: {{ dictionary2['AL'] }}</p>
+        <p>Crime total for Loudon Campus 2022: {{ dictionary2['LO'] }}</p>
+        <p>Crime total for Woodbridge Campus 2022: {{ dictionary2['WO'] }}</p>
+        <p>Crime total for Manassas Campus 2022: {{ dictionary2['MA'] }}</p>
 
-        <li>Crime total for Medical Education Campus 2022: {{ dictionary2['MEC'] }}</li>
-        <li>Crime total for Fairfax 2022: {{ dictionary2['Fairfax'] }}</li>
+        <p>Crime total for Medical Education Campus 2022: {{ dictionary2['MEC'] }}</p>
+        <p>Crime total for Fairfax 2022: {{ dictionary2['Fairfax'] }}</p>
 
-        <li>Crime total for Reston 2022: {{ dictionary2['Reston'] }}</li>
-        <li>Crime total for Bookstore 2022: {{ dictionary2['Bookstore'] }}</li>
+        <p>Crime total for Reston 2022: {{ dictionary2['Reston'] }}</p>
+        <p>Crime total for Bookstore 2022: {{ dictionary2['Bookstore'] }}</p>
+
+        <br>
+        <hr>
 
 
 
+        <div id="chat-container">
+          <div id="chat-log"></div>
+          <input type="text" id="user-input" class="input" placeholder="Ask a question about 2022 NVCC crime data"
+            value="">
+          <br><br>
+          <button id="send-button" class="button mt-small">Send</button>
+        </div>
 
+
+        <script>const apiKey = 'YOUR_API_KEY'; // Replace with your ChatGPT API key
+          const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
+
+          const chatLog = document.getElementById('chat-log');
+          const userInput = document.getElementById('user-input');
+          const sendButton = document.getElementById('send-button');
+
+          sendButton.addEventListener('click', () => {
+            const userMessage = userInput.value;
+            if (userMessage.trim() !== '') {
+              appendMessage('You', userMessage);
+
+              // Send user message to ChatGPT API
+              fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  prompt: userMessage,
+                  max_tokens: 50, // Adjust this as needed
+                }),
+              })
+                .then(response => response.json())
+                .then(data => {
+                  const chatGPTResponse = data.choices[0].text;
+                  appendMessage('ChatGPT', chatGPTResponse);
+                })
+                .catch(error => console.error(error));
+
+              userInput.value = ''; // Clear user input
+            }
+          });
+
+          function appendMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatLog.appendChild(messageDiv);
+          }
+        </script>
 
       </div>
-    </div>
-    <div class="container">
-      <p>table of contents</p>
-      <a href="#allcrimes">
-        <p>Show all crime descriptions ordered by frequency</p>
-      </a>
+      <script src="script.js"></script>
 
-      <a href="#crimesordered">
-        <p>Show all crime data</p>
-      </a>
-      <h1>Raw data:</h1>
-      <p id="crimesordered">{{dictionary2 }}</p>
-      <p id="allcrimes">All crimes ordered by frequency: {{reversed_dict}}</p>
-
-      <p id="alldata">{{logsof2022}}</p>
     </div>
+
+
+  </div>
+  <div class="container">
+    <p>table of contents</p>
+    <a href="#allcrimes">
+      <p>Show all crime descriptions ordered by frequency</p>
+    </a>
+
+    <a href="#crimesordered">
+      <p>Show all crime data</p>
+    </a>
+    <h1>Raw data:</h1>
+    <p id="crimesordered">{{dictionary2 }}</p>
+    <p id="allcrimes">All crimes ordered by frequency: {{reversed_dict}}</p>
+
+    <p id="alldata">{{logsof2022}}</p>
+  </div>
 
 
 
