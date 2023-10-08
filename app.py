@@ -3956,7 +3956,7 @@ reversed_dict = sortedcrimes
 # print(sortedcrimes)
 
 
-openai.api_key = ""
+openai.api_key = os.environ.get('openaikey')
 
 
 @app.route("/", methods=("GET", "POST"))
@@ -3978,18 +3978,11 @@ def index():
 
 def generate_prompt(animal):
     return """
-Suggest 1 safety ideas
 
-noun: crime
-ideas: walk in groups, tell people before you go out, don't leave belongings in your car in sight
 
-noun: safety
+Add some safety tips:
 
-ideas: call campus police, use the blue light buttons, don't go out late at night
-
-past crime data:
-
-avoid high crime campuses, tell your parents where you are, don't walk to high crime areas
+answer: don't walk alone at night, walk in groups, tell a parent when you go out
 """.format()
 
 
