@@ -1,13 +1,3 @@
-from flask import Flask, redirect, render_template, request, url_for
-import openai
-import os
-app = Flask(__name__)
-
-
-
-# print(data)
-
-
 logsof2022 = [
  {
    "FIELD1": "Case\n Number",
@@ -3868,86 +3858,10 @@ logsof2022 = [
    "FIELD6": "AL",
    "FIELD7": "GOA",
    "FIELD8": "White vehicle near dumpsters"
- }
-]
+ }]
 
 
-# print(logsof2022)
-
-list2 = []
-for crime in logsof2022:
-  # print(crime["FIELD6"])
-
-  list2.append(crime["FIELD6"])
-  # for crime.field6 in crime:
-  #   print(e,b)
-
-# print("this is list2", list2)
-
-
-dictionary = {"AN" : 0, "LO" : 0, "MA" : 0, "AL" : 0, "WO" : 0, "Bookstore" : 0, "MEC" : 0, "Fairfax" : 0}
-
-
-
-for i in list2:
-  for value in dictionary:
-    if i == value == "AN":
-      dictionary["AN"] = dictionary["AN"] +1
-    if i == value == "LO":
-      dictionary["LO"] = dictionary["LO"] +1
-    if i == value == "AL":
-      dictionary["AL"] = dictionary["AL"] +1
-    if i == value == "MA":
-      dictionary["MA"] = dictionary["MA"] +1
-    # if i == value == "Bookstore":
-    #   dictionary["Bookstore"] = dictionary["Bookstore"] +1
-    if i == value == "MEC":
-      dictionary["MEC"] = dictionary["MEC"] +1
-    if i == value == "Fairfax":
-      dictionary["Fairfax"] = dictionary["Fairfax"] +1
-    if i == value == "WO":
-      dictionary["WO"] = dictionary["WO"] +1
-
-
-dictionary2 = {}
-# print(dictionary2)
-for campus in list2:
-
-  var = dictionary2.get(campus)
-
-  if var:
-    dictionary2[campus] = dictionary2[campus]+1
-  else:
-    dictionary2.update({campus : 1})
-
-
-print(dictionary2)
-
-list3 = []
-for actualcrime in logsof2022:
-  # print(actualcrime["FIELD8"])
-
-  list3.append(actualcrime["FIELD8"])
-
-
-# print(list3)
-
-
-
-dictionary3 = {}
-# print(dictionary3)
-for ret in list3:
-
-  var = dictionary3.get(ret)
-
-  if var:
-    dictionary3[ret] = dictionary3[ret]+1
-  else:
-    dictionary3.update({ret : 1})
-
-
-# print(dictionary3)
-
+from flask import Flask, render_template
 import matplotlib.pyplot as plt
 from matplotlib import style 
 import io 
@@ -4125,30 +4039,25 @@ Graph_List3 = [Time_sinceAN,
     Time_sinceFA,
     Time_sinceRE,]
 
-sortedcrimes = dict(sorted(dictionary3.items(), key=lambda item: item[1]))
 
-reversed_dict = sortedcrimes
-# print(sortedcrimes)
+# fig = plt.figure(figsize=(5,5))
+# plt.xlabel("Months of the Year")
+# plt.ylabel("No. of Crimes Reported")
+# # if plot_id is plt.title("Crimes in ")
+# x = np.arange(0,12)
+# y = Graph_List2[0]
+# plt.bar(x, y, color ='maroon',width = 4)
+# plt.show()
 
+app = Flask(__name__)
 
-openai.api_key = os.environ.get('openaikey')
+# back to home directory
 
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-@app.route("/", methods=("GET", "POST"))
-def index():
-    if request.method == "POST":
-        animal = request.form["crime"]
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=generate_prompt(animal),
-            temperature=0.6,
-        )
-        return redirect(url_for("index", result=response.choices[0].text))
-    
-    result = request.args.get("result")
-
-    print(result)
-    return render_template("index.html", result=result, logsof2022=logsof2022, dictionary2=dictionary2, reversed_dict=reversed_dict)
+#plotting points and sending the image to plot.html template
 
 
 @app.route('/plot/<int:plot_id>')
@@ -4245,18 +4154,8 @@ def plot(plot_id):
     num = sum(data)/len(data)
     
     return render_template('plot.html', plot_url1=plot_url1, plot_url2 = plot_url2, num = num)
-
-
-
-def generate_prompt(animal):
-    return """
-
-
-Add some safety tips:
-
-answer: don't walk alone at night, walk in groups, tell a parent when you go out
-""".format()
-
-
-if __name__ == "__main__":
+# @app.route('/plot/<int:plot_id>')
+# def home():
+#   return render_template('index.html')
+if __name__ == '__main__':
     app.run(debug=True)
